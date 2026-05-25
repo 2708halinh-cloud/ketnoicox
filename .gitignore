@@ -1,0 +1,8 @@
+.codex/
+.ollama/
+AppData/
+*.db
+*.bak
+.env
+__pycache__/
+*.pyc
