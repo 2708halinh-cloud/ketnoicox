@@ -6,3 +6,9 @@ AppData/
 .env
 __pycache__/
 *.pyc
+
+# Runtime output folders if BASE_DIR is changed to project-local
+logs/
+temp/
+results/
+sessions/
