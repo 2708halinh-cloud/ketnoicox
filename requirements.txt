@@ -1,0 +1,2 @@
+python-telegram-bot>=22,<23
+zlapi>=1.0.1
