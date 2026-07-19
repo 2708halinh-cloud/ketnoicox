@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "assets": {
+    "welcome_banner": {
+      "type": "image",
+      "source": "canva",
+      "url": "",
+      "notes": "Banner chao mung do admin duyet."
+    },
+    "register_guide": {
+      "type": "image",
+      "source": "canva",
+      "url": "",
+      "notes": "Anh huong dan dang ky do admin duyet."
+    },
+    "group_rules": {
+      "type": "image",
+      "source": "canva",
+      "url": "",
+      "notes": "Anh noi quy nhom do admin duyet."
+    },
+    "welcome_video": {
+      "type": "video",
+      "source": "heygen",
+      "url": "",
+      "notes": "Video chao mung/hoc cach dung neu co script hop le."
+    }
+  }
+}

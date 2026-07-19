@@ -4,5 +4,10 @@ AppData/
 *.db
 *.bak
 .env
+bot_*.log
+*_salvaged.py
+admin_quanly_group.json
+supper_admin_group.json
+session_backups/
 __pycache__/
 *.pyc

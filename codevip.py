@@ -1,4 +1,4 @@
-﻿import os
+import os
 import logging
 import asyncio
 import time
@@ -7,6 +7,7 @@ import sqlite3
 import hashlib
 import secrets
 import json
+import re
 import urllib.parse
 import urllib.request
 import urllib.error
@@ -15,16 +16,62 @@ from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQu
 
 # Cấu hình theo dõi lỗi
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)
+
+
+class RedactTelegramTokenFilter(logging.Filter):
+    def filter(self, record):
+        message = record.getMessage()
+        redacted = re.sub(r"bot\d+:[A-Za-z0-9_-]+", "bot<redacted>", message)
+        if redacted != message:
+            record.msg = redacted
+            record.args = ()
+        return True
+
+
+for handler in logging.getLogger().handlers:
+    handler.addFilter(RedactTelegramTokenFilter())
+
+
+def load_local_env(path: str = ".env"):
+    if not os.path.isabs(path):
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), path)
+    if not os.path.exists(path):
+        return
+    with open(path, "r", encoding="utf-8") as f:
+        for raw_line in f:
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = value
+
+
+def env_int(name: str, default: int) -> int:
+    try:
+        return int(os.getenv(name, str(default)).strip())
+    except ValueError:
+        return default
+
+
+load_local_env()
 
 # ==================== CẤU HÌNH HỆ THỐNG MẶC ĐỊNH ====================
-TOKEN_BOT = "8658236339:AAE2hSUVcqlKlg9HFe91GI3ZwQnDbCOifVU"
-ADMIN_ID = 8445193286           
-ADMIN_USERNAME = "@VGAH510"     
+TOKEN_BOT = os.getenv("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_API_ID = env_int("TELEGRAM_API_ID", 0)
+TELEGRAM_API_HASH = os.getenv("TELEGRAM_API_HASH", "")
+TELEGRAM_DC2_URLS = os.getenv("TELEGRAM_DC2_URLS", "")
+ADMIN_ID = env_int("TELEGRAM_ADMIN_ID", 7959686962)
+ADMIN_USERNAME = os.getenv("TELEGRAM_ADMIN_USERNAME", "@gifhub2708")
 TARGET_CHAT = "@khuyenmaixx88d1d23qc" 
-WEB_URL = "https://gameqt.pro" 
-LINK_NHAP_CODE = "xx88code.com" 
-ZALO_IMEI = "3a095a4c-81aa-49b0-8d43-e5dfe0ec241a-91e1a2a41c0741f7f47615ab9de2fb8a"
-COOKIE_RAW = "zpw_sek=W-50.448003223.a0.-4SEy9TxoYq0XtatjdlABUnPhqQrGUXurXNvGz0lYLJPCAPurJw2VA5KYKdmHlSFwdKdSDulJhgaUa-hXH7ABG"
+WEB_URL = "https://txx88.net"
+LINK_NHAP_CODE = "https://xx88code.com"
+ZALO_IMEI = os.getenv("ZALO_IMEI", "")
+COOKIE_RAW = os.getenv("ZALO_COOKIE_RAW", "")
 ZALO_AUTO_REPLY = (
     "🇧🇷 👑 TỔNG XX88 BRAZIL XIN CHÀO QUÝ KHÁCH 👑 🇧🇷\n"
     "🇺🇸 👑 WELCOME TO XX88 BRAZIL 👑 🇧🇷\n\n"
@@ -32,8 +79,8 @@ ZALO_AUTO_REPLY = (
     "📝 (Vietnamese content is auto-translated from global source.)\n\n"
     "✨ Hệ thống đã nhận tin nhắn của bạn. Vui lòng truy cập:\n"
     "✨ We have received your message. Please visit:\n"
-    "🔗 Đăng ký nhanh / Quick Register: https://gameqt.pro\n"
-    "🎁 Nhận code tự động / Auto Code: t.me/xx88_code_bot\n\n"
+    "🔗 Đăng ký nhanh / Quick Register: https://txx88.net\n"
+    "🎁 Nhận code tự động / Auto Code: t.me/codetxx88_bot\n\n"
     "💬 Admin sẽ hỗ trợ sớm nhất. Chúc bạn may mắn và thắng lớn!\n"
     "💬 Admin will support you shortly. Good luck and big wins!"
 )
@@ -48,9 +95,9 @@ THONG_BAO_START_ACTIVE = True
 HIEN_THI_ANH_DONG = True
 
 KEYWORDS_ROUTING = {
-    "dangky": "https://gameqt.pro",
-    "nhancode": "https://xx88code.com",
-    "hotro": "https://t.me/VGAH510"
+    "dangky": "https://txx88.net",
+    "nhancode": "https://t.me/codetxx88_bot",
+    "hotro": f"https://t.me/{ADMIN_USERNAME.replace('@', '')}"
 }
 BANNED_USERS = set()
 EXTRA_ADMINS = set()
@@ -292,6 +339,10 @@ def notify_admin_sync(text: str) -> None:
 
 
 def start_zalo_auto_worker() -> None:
+    if str(get_config("zalo_active", "False")).lower() not in ("1", "true", "yes", "on"):
+        logging.info("Zalo worker bo qua vi zalo_active=False.")
+        return
+
     try:
         from zlapi import ZaloAPI
         from zlapi.models import Message
