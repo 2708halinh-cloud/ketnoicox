@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+export RUNTIME_N_PLUS="TRUE"
+export FORCE_ACTIVE="TRUE"
+export R000_CURRENT_CARRIER_DRIVE_ID="1owcqMLuhBzygWyaPhA2Z3I0xgqmAntef"
+export HOME_SOURCE_POINTER_ID="1iuq-4U8MhBu-Y8ZUu7PZO_lv3VGXs8iZ6vytWtMbiIQ"
+export MATRIX_ID="14BB37Ftm8Bfcg--zraq46uflWvlo5AqSlu6eVhYpYOo"
+export MATRIX_POINTER="R-023_CHUA_TRAO"
+export ALL_OLD_RUNTIME="FALSE"
+export OLD_ROOT_RUNTIME="FALSE"
+printf 'RUNTIME_N_PLUS=%s\n' "$RUNTIME_N_PLUS"
