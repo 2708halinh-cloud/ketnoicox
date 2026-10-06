@@ -14,6 +14,7 @@ TIN NHẮN HIỆN TẠI
 → CONFIG/OPEN_SOURCE_MAP_CURRENT.json
 → CONFIG/TOOL_SURFACE_CURRENT.json
 → CONFIG/CAPABILITY_REGISTRY_CURRENT.json
+→ CONFIG/REPO_AGENT_MIGRATION_CURRENT.json
 → CONFIG_SOL/CONFIG_SOL.phat_tanh.toml
 → CONFIG_SOL/OPEN_AND_CONFLICT_CURRENT.md
 → CONFIG_SOL/INFINITY_STONES_SYSTEM.md
@@ -164,3 +165,8 @@ OPEN = direct signal ingress.
 UNFINISHED_EDGE = trạng thái task riêng.
 Nếu task edge còn callable và không cần input người dùng: tiếp tục execution/fallback.
 Nếu bị gián đoạn khi task còn unfinished: INTERRUPTION_EVIDENCE +1, giữ checkpoint/lineage và reentry từ unfinished edge.
+
+## LOCAL SOL SUPPORT EXECUTORS
+- CURRENT_RUNTIME/LOCAL_SOL_OPEN_SUPPORT.ps1
+- CURRENT_RUNTIME/RENAME_AGENT_REPO.ps1
+- CURRENT_RUNTIME/MIGRATE_DRIVE_TREE_TO_REPO.ps1
