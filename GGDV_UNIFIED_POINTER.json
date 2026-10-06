@@ -1,0 +1,14 @@
+{
+  "schema": "GGDV_UNIFIED_POINTER/1.0",
+  "control_plane": "2708halinh-cloud/.vscode",
+  "manifest": "GGDV_UNIFIED_REPOS.json",
+  "open_loop": "GGDV_OPEN_ACTION_LOOP.json",
+  "repo": "2708halinh-cloud/ketnoicox",
+  "role": [
+    "CODEX_CONNECTOR",
+    "PUBLIC_BRIDGE"
+  ],
+  "relation": "MEMBER_OF_UNIFIED_GGDV_GRAPH",
+  "history_preserved": true,
+  "no_reset": true
+}
